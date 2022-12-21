@@ -14,3 +14,15 @@ export async function signup(req, res){
     }
 }
 
+export async function signin(req, res){
+    const {email, password} = req.body;
+    const token = uuidV4();
+    const { id } = req.user
+    try {
+        await connectionDB.query('INSERT INTO sessions ("userId", token) VALUES ($1, $2)', [id, token]);
+        res.status(200).send(token);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
