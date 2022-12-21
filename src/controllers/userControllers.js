@@ -15,7 +15,6 @@ export async function signup(req, res){
 }
 
 export async function signin(req, res){
-    const {email, password} = req.body;
     const token = uuidV4();
     const { id } = req.user
     try {

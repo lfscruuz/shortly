@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import { v4 as uuidV4 } from "uuid";
 import { connectionDB } from "../database/db.js";
 import { signinSchema, signupSchema } from "../schemas/userSchemas.js";
 
