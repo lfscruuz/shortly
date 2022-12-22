@@ -1,3 +1,4 @@
+import { json } from "express";
 import { nanoid } from "nanoid";
 import { connectionDB } from "../database/db.js";
 
@@ -15,20 +16,50 @@ export async function postShorten(req, res){
     }
 }
 
-export async function getUrlById(req, res){
-    const {id} = req.params;
+export async function getUrlById(req, res, next){
+    const {id, shortUrl, url} = req.url;
 
     try {
-        const url = await connectionDB.query('SELECT id, "shortUrl", url FROM urls WHERE urls.id = $1', [id])
-        console.log(url.rows[0])
-
-        if (!url.rows[0].shortUrl){
-            return res.status(404)
-        }
-        
-        res.status(200).send(url.rows[0])
+        res.status(200).json({id, shortUrl, url})
     } catch (error) {
         console.log(error);
-        res.status(500);
+        return res.status(500)
+    }
+}
+
+export async function openUrl(req, res){
+    const { shortUrl } = req.params;
+
+    try {
+        const selection = await connectionDB.query('SELECT * FROM urls WHERE "shortUrl" = $1', [shortUrl]);
+        
+        if (!selection.rows[0]){
+            return res.sendStatus(404)
+        }
+        
+        const url = selection.rows[0].url
+        const visitCount = selection.rows[0].visitCount + 1;
+        await connectionDB.query('UPDATE urls SET "visitCount" = $1 WHERE "shortUrl" = $2', [visitCount, shortUrl]);
+        res.redirect(url);
+    } catch (error) {
+        console.log(error);
+        return res.status(500);
+    }
+}
+
+export async function removeUrl(req, res){
+    const url = req.url;
+    const {id} = req.body;
+    const {userId} = req.session;
+
+    try {
+        if (userId !== url.userId){
+            return res.status(401);
+        }
+        await connectionDB.query('DELETE FROM urls WHERE urls."id" = $1', [id]);
+        res.sendStatus(204)
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500)
     }
 }
