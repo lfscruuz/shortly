@@ -45,10 +45,12 @@ export async function showMe(req, res){
 
 export async function ranking(req, res){
     try {
-        const users = await connectionDB.query('select users.id, users.name, (select count(urls.id) from urls join users on urls."userId" = users.id) as "linksCount", (select sum(urls."visitCount") from urls join users on urls."userId" = users.id) as "visitCount" from users');
+        const users = await connectionDB.query('select users.id, users.name, (select count(urls.id) from urls join users on urls."userId" = users.id where urls."userId" = 2 group by urls."userId") as "linksCount", (select sum(urls."visitCount") from urls join users on urls."userId" = users.id where urls."userId" = users.id) as "visitCount" from users order by "visitCount" desc');
         res.send(users.rows);
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
     }
+
+    
 }
