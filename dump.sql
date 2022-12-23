@@ -26,8 +26,9 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.sessions (
     id integer NOT NULL,
-    "userId" integer NOT NULL,
-    token text NOT NULL
+    "userId" text NOT NULL,
+    token text NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -57,10 +58,11 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 
 CREATE TABLE public.urls (
     id integer NOT NULL,
-    "userId" integer NOT NULL,
+    "userId" text NOT NULL,
     "shortUrl" text NOT NULL,
     url text NOT NULL,
-    "visitCount" integer DEFAULT 0 NOT NULL
+    "visitCount" integer DEFAULT 0 NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -92,7 +94,8 @@ CREATE TABLE public.users (
     id integer NOT NULL,
     name text NOT NULL,
     email text NOT NULL,
-    password text NOT NULL
+    password text NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -141,56 +144,39 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.sessions VALUES (5, 1, '63ab1356-4ad2-4245-8d91-4c2c22e5375f');
-INSERT INTO public.sessions VALUES (6, 2, '72b6d8f3-61c3-4003-8a9d-3592a4eebf75');
 
 
 --
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.urls VALUES (19, 1, 'jIwPBEz_Tn9FT8A2ne5vZ', 'http://efg.com', 0);
-INSERT INTO public.urls VALUES (20, 1, 's_ZpUJNsB4BlUOAe3zO1-', 'http://efg.com', 0);
-INSERT INTO public.urls VALUES (22, 1, 'kex1IrzT5qs3RKJ0xRzFi', 'http://abcd.com', 0);
-INSERT INTO public.urls VALUES (23, 1, 'ilE3lMQBzeiFwsy6zwL0f', 'http://abcd.com', 0);
-INSERT INTO public.urls VALUES (26, 2, 'Jxaa1lHys_yvMoWSBvhsv', 'http://abcd.com', 0);
-INSERT INTO public.urls VALUES (27, 2, '-0w-Uf4cd6n62N3hXN5nV', 'http://abcd.com', 0);
-INSERT INTO public.urls VALUES (28, 2, 'KzzqTpMUZsyK1ws30I241', 'http://efg.com', 0);
-INSERT INTO public.urls VALUES (29, 2, 'ok_TH8Ury3_I9q56JYm2q', 'http://efg.com', 0);
-INSERT INTO public.urls VALUES (30, 2, '_SLFr7wcJxDYb8yNZCxYD', 'http://efg.com', 0);
-INSERT INTO public.urls VALUES (18, 1, 'UjbHDFGMRA7NxQpP37SJP', 'http://efg.com', 4);
-INSERT INTO public.urls VALUES (21, 1, 'CZFfFtsPxFoj8Y_GzxptC', 'http://efg.com', 2);
-INSERT INTO public.urls VALUES (25, 2, 'tsbUGIS7t-fu9qvBV9dVT', 'http://abcd.com', 2);
-INSERT INTO public.urls VALUES (24, 2, 'yCiGQAx-qJUHyKwz8RJY8', 'http://abcd.com', 3);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.users VALUES (1, 'luis', 'luis@email.com', '$2b$10$HkX8MXhHvOu9uRMXBZwhp.bCGTmDy0jf0WMbGlxy/WWWggLveakaG');
-INSERT INTO public.users VALUES (2, 'felipe', 'felipe@email.com', '$2b$10$ED0yj2D4kkUt8VK.L5hs/uUf5lroBxDubXqvVPATtxbN5GI3xvzum');
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 6, true);
+SELECT pg_catalog.setval('public.sessions_id_seq', 1, false);
 
 
 --
 -- Name: urls_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.urls_id_seq', 30, true);
+SELECT pg_catalog.setval('public.urls_id_seq', 1, false);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
 
 
 --
