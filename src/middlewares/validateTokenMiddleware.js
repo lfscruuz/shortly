@@ -5,7 +5,7 @@ export async function validateToken(req, res, next) {
     let session;
     const token = authorization?.replace("Bearer ", "");
     if (!token) {
-        return res.status(401);
+        return res.sendStatus(401);
     }
     try {
         session = await connectionDB.query('SELECT sessions.*, users.id AS "userId" FROM sessions JOIN users ON users.id = sessions."userId" WHERE sessions.token = $1', [token])

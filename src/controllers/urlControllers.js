@@ -43,7 +43,7 @@ export async function openUrl(req, res) {
         res.redirect(url);
     } catch (error) {
         console.log(error);
-        return res.status(500);
+        return res.sendStatus(500);
     }
 }
 

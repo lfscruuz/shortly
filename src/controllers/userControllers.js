@@ -25,3 +25,30 @@ export async function signin(req, res){
         return res.sendStatus(500);
     }
 }
+
+export async function showMe(req, res){
+    const {userId} = req.session;
+
+    try {
+        const user = await connectionDB.query(`SELECT users.id, users.name, 
+        (select sum("visitCount") as "visitCount" from urls where urls."userId"  = $1), (select json_agg(json_build_object('id', urls.id, 'userId', "userId", 'url', "url", 'visitCount', "visitCount")) from urls WHERE urls."userId" = $1) as "shortenedUrls"
+        FROM users where users.id = $1
+    `, [userId]);
+
+        res.send(user.rows[0])
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500)
+    }
+    
+}
+
+export async function ranking(req, res){
+    try {
+        const users = await connectionDB.query('select users.id, users.name, (select count(urls.id) from urls join users on urls."userId" = users.id) as "linksCount", (select sum(urls."visitCount") from urls join users on urls."userId" = users.id) as "visitCount" from users');
+        res.send(users.rows);
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+}
